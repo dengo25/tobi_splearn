@@ -2,6 +2,8 @@ package tobyspring.splearn.domain;
 
 import lombok.Getter;
 import lombok.ToString;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 import java.util.Objects;
 
