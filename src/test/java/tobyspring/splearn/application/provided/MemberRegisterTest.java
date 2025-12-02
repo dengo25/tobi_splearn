@@ -1,5 +1,6 @@
 package tobyspring.splearn.application.provided;
 
+import jakarta.persistence.EntityManager;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -8,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import tobyspring.splearn.SplearnTestConfiguration;
 import tobyspring.splearn.domain.*;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -15,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @Transactional
 @Import(SplearnTestConfiguration.class)
 //@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL) //spring container를 통해서 설정을 갖고온다. -> test-properties
-public record MemberRegisterTest(MemberRegister memberRegister) {
+public record MemberRegisterTest(MemberRegister memberRegister, EntityManager entityManager) {
   
   @Test
   void register() {
@@ -34,6 +36,19 @@ public record MemberRegisterTest(MemberRegister memberRegister) {
         .isInstanceOf(DuplicateEmailException.class);
     
   }
+  
+  @Test
+  void activate() {
+    Member member = memberRegister.register(MemberFixture.createMemberRegisterRequest());
+    entityManager.flush();
+    entityManager.clear();
+    
+    member = memberRegister.activate(member.getId());
+    entityManager.flush();
+    
+    assertThat(member.getStatus()).isEqualTo(MemberStatus.ACTIVE);
+  }
+  
   
   @Test
   void memberRegisterRequestFail() {
