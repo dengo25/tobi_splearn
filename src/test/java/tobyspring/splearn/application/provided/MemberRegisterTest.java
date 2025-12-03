@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import tobyspring.splearn.SplearnTestConfiguration;
 import tobyspring.splearn.domain.*;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -17,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @Transactional
 @Import(SplearnTestConfiguration.class)
 //@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL) //spring container를 통해서 설정을 갖고온다. -> test-properties
-public record MemberRegisterTest(MemberRegister memberRegister, EntityManager entityManager) {
+record MemberRegisterTest(MemberRegister memberRegister, EntityManager entityManager) {
   
   @Test
   void register() {
@@ -53,12 +52,12 @@ public record MemberRegisterTest(MemberRegister memberRegister, EntityManager en
   @Test
   void memberRegisterRequestFail() {
     
-    extracted(new MemberRegisterRequest("toby@splearn.app", "Toby", "longsecret"));
-    extracted(new MemberRegisterRequest("toby@splearn.app", "Charlie_____________________________", "longsecret"));
-    extracted(new MemberRegisterRequest("tobysplearn.app", "Charlie", "longsecret"));
+    checkValidation(new MemberRegisterRequest("toby@splearn.app", "Toby", "longsecret"));
+    checkValidation(new MemberRegisterRequest("toby@splearn.app", "Charlie_____________________________", "longsecret"));
+    checkValidation(new MemberRegisterRequest("tobysplearn.app", "Charlie", "longsecret"));
   }
   
-  private void extracted(MemberRegisterRequest invalid) {
+  private void checkValidation(MemberRegisterRequest invalid) {
     assertThatThrownBy(() -> memberRegister.register(invalid))
         .isInstanceOf(ConstraintViolationException.class);
   }
