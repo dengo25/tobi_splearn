@@ -15,13 +15,8 @@ import static org.springframework.util.Assert.state;
 @ToString
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@NaturalIdCache
-public class Member {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+public class Member extends AbstractEntity {
   
-  @Embedded
   @NaturalId
   private Email email;
   
@@ -29,7 +24,6 @@ public class Member {
   
   private String passwordHash;
   
-  @Enumerated(EnumType.STRING)
   private MemberStatus status;
   
   
@@ -47,13 +41,13 @@ public class Member {
   
   
   public void activate() {
-    state(status == MemberStatus.PENDING,"PENDING 상태가 아닙니다.");
+    state(status == MemberStatus.PENDING, "PENDING 상태가 아닙니다.");
     
     this.status = MemberStatus.ACTIVE;
   }
   
   public void deactivate() {
-    state(status == MemberStatus.ACTIVE,"ACTIVE 상태가 아닙니다.");
+    state(status == MemberStatus.ACTIVE, "ACTIVE 상태가 아닙니다.");
     
     this.status = MemberStatus.DEACTIVATED;
   }
