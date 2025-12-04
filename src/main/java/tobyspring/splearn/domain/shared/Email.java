@@ -1,7 +1,4 @@
-package tobyspring.splearn.domain;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
+package tobyspring.splearn.domain.shared;
 
 import java.util.regex.Pattern;
 
