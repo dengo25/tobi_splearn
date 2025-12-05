@@ -73,15 +73,6 @@ class MemberTest {
     assertThat(member.verifyPassword("hello", passwordEncoder)).isFalse();
   }
   
-  @Test
-  void changeNickname() {
-    assertThat(member.getNickname()).isEqualTo("Charlie");
-    
-    member.changeNickname("Charlie2");
-    
-    assertThat(member.getNickname()).isEqualTo("Charlie2");
-  }
-  
   
   @Test
   void changePassword() {
@@ -125,6 +116,15 @@ class MemberTest {
     assertThat(member.getNickname()).isEqualTo(request.nickname());
     assertThat(member.getDetail().getProfile().address()).isEqualTo(request.profileAddress());
     assertThat(member.getDetail().getIntroduction()).isEqualTo(request.introduction());
+  }
+  
+  @Test
+  void updateInfoFail() {
+    assertThatThrownBy(() -> {
+      var request = new MemberInfoUpdateRequest("Leo", "tovy1000", "자기소개");
+      member.updateInfo(request);
+    }).isInstanceOf(IllegalStateException.class);
+    
   }
   
   
